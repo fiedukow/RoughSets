@@ -869,6 +869,7 @@ predict.RuleSetFRST <- function(object, newdata, ...) {
 
 		## make results not to convert into numeric
 		res <- data.frame(stringsAsFactors = FALSE)
+		fired.rules.all <- c()
 
 		for (i in 1 : nrow(newdata)){
 			miu.Ra <- data.frame(stringsAsFactors = FALSE)
@@ -926,6 +927,7 @@ predict.RuleSetFRST <- function(object, newdata, ...) {
 
 				## get results
 				res <- rbind(res, miu.Ra[fired.rules, 1, drop = FALSE])
+				fired.rules.all <- rbind(fired.rules.all, fired.rules)
 			}
 			else {
 				if (object$type.method == c("RI.hybridFS.FRST")){
@@ -936,10 +938,13 @@ predict.RuleSetFRST <- function(object, newdata, ...) {
 			}
 		}
 	}
-
 	rownames(res) <- NULL
 	colnames(res) <- object$consequent.attr
-	return(res)
+
+	result = list()
+	result$prediction = res
+	result$fired.rules = fired.rules.all
+	return(result)
 }
 
 
